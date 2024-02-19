@@ -2,10 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\TestMail;
+
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
+
+use Hash;
+use Mail;
+use Str;
 
 class UserController extends Controller
 {
@@ -56,6 +62,23 @@ class UserController extends Controller
             'email'=>$request->email,
             'password'=>$request->password,   
         ]);
+
+        
+        // $save = new User;
+        // $save->name = $request->name;
+        // $save->first_name = $request->first_name;
+        // $save->last_name = $request->last_name;
+        // $save->address = $request->address;
+        // $save->mobile = $request->mobile;
+        // $save->role = $request->role;
+        // $save->status = $request->status;
+        // $save->email = $request->email;
+        // $save->password = Hash::make($request->password);
+        // $save->remember_token = Str::random(40);
+        // $save->save();
+
+
+        // Mail::to($save->email)->send(new TestMail($save));
 
         session()->flash('Add', 'تم إضافة المستخدم بنجاح');
         return back();

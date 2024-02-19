@@ -104,6 +104,15 @@
 										</div>
 									</div><br>
 
+									<div class="row">
+										<div class="col">
+											<label for="inputName" class="control-label"></label>
+											<input type="hidden" name="password" value="{{ $user->password }}">
+											<input type="hidden" class="form-control" id="inputName" name="password"
+											value="{{ $user->password }}" required>
+										</div>
+									</div><br>
+
 									<div class="form-group">
 										<label>صلاحية المستخدم</label>
 											<select name="role" class="testselect2">

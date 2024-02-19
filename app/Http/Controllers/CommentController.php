@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Comment;
 use App\Models\News;
+use App\Models\Like;
 
 class CommentController extends Controller
 {
@@ -17,6 +18,14 @@ class CommentController extends Controller
     {
         $comments = Comment::orderBy('id' ,'desc')->get();
         return view('admin.news.comments', compact('comments'));
+    }
+
+    public function show_news($id)
+    {
+        $news = News::where('id', $id)->get();
+        $comments = Comment::where('news_id', $id)->orderBy('id' ,'desc')->get();
+
+        return view('site.news.new', compact('news', 'comments'));
     }
 
     /**
@@ -34,16 +43,13 @@ class CommentController extends Controller
      */
     public function store(Request $request, $id): RedirectResponse
     {
-        $validator = $request->Validate([
-            'content' => 'required|min:5|max:255', 
-            'user_id' => 'required', 
-        ]);
+        $comment = new Comment();
+        $comment->content = $request->content;
+        $comment->news_id = $id;
+        $comment->user_id = auth()->id();
+        $comment->save();
 
-        Comment::create([
-            'content'=>$request->content,
-            'news_id'=>$id,
-            'user_id'=>$request->user_id,
-        ]);
+        // dd($comment);
 
         session()->flash('Add', 'تم إضافة التعليق بنجاح');
         return back();
@@ -95,12 +101,6 @@ class CommentController extends Controller
     
 
 
-    public function show_news($id)
-    {
-        $news = News::where('id', $id)->get();
-        $comments = Comment::where('news_id', $id)->get();
 
-        return view('site.news.new', compact('news', 'comments'));
-    }
 
 }

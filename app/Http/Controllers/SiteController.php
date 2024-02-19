@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\Category;
 use App\Models\News;
 use App\Models\Comment;
-
+use App\Models\Like;
 class SiteController extends Controller
 {
     /**
@@ -18,13 +18,10 @@ class SiteController extends Controller
     {
         $categories = Category::orderBy('id' ,'desc')->get();
         $news = News::orderBy('id' ,'desc')->get();
-        // $comments = Comment::all();
-
-
-        // $comments = Comment::where('news_id', $news->id)->get();
+        $likes = Like::get();
 
         $count = News::count();
-        return view('site.home', compact('categories', 'news', 'count'));
+        return view('site.home', compact('categories', 'news', 'count', 'likes'));
     }
 
     /**
@@ -32,15 +29,20 @@ class SiteController extends Controller
      */
     public function create()
     {
-        //
+        return view('site.home');
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request, $id)
     {
-        //
+        $like = new Like();
+        $like->news_id = $id;
+        $like->user_id = auth()->id();
+        $like->save();
+
+        return back();
     }
 
     /**
@@ -70,28 +72,27 @@ class SiteController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy($id)
     {
-        //
+        $dis = Like::where('news_id', $id)->where('user_id' ,auth()->id())->first();
+        if($dis)
+        $dis->delete();
+        return back();
     }
 
 
 
-    // public function add_comment(Request $request)
-    // {
-    //     if(Auth::id()){
-    //         $comment = new Comment();
-    //         $comment->user_id = Auth::user()->id;
-    //         $comment->content = $request->content;
-    //         $comment->save();
-            
-    //         return redirect()->back();
-    //     }
-    //     else{
-    //         return redirect('login');
-    //     }
-    // }
+    public function insert_like($id){
 
+        $insert = Like::where('news_id', $id)->where('user_id' ,auth()->id())->first();
+        if($insert == null)
+        {
+            $like = new Like();
+            $like->news_id = $id;
+            $like->user_id = auth()->id();
+            $like->save();
+        }
+        return back();
+    }
 
 }
-

@@ -143,9 +143,9 @@
 						<hr>
 						<div style="text-align: center; padding-bottom: 30px;">
 							<h1 style="font-size: 30px; text-align: center; padding-top: 20px; padding-bottom: 20px;">Comments</h1>
-							<form action="{{  route('comment.save', $new->id) }}" method="POST">
+							<form action="{{route('comment.save', $new->id) }}" method="POST">
 								@csrf
-								<input type="hidden" name="user_id" value="{{ auth()->id() }}">
+								{{-- <input type="hidden" name="user_id" value="{{ auth()->id() }}"> --}}
 								<textarea style="height: 150px; width: 600px;" name="content" placeholder="Comment something here"></textarea>
 								<br>
 								<div class="d-flex justify-content-center">

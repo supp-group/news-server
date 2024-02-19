@@ -1,15 +1,21 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\NewsController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\RateController;
+use App\Http\Controllers\SiteController;
 use App\Http\Controllers\TagController;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\SiteController;
-use App\Http\Controllers\RateController;
-use App\Http\Controllers\CommentController;
+use App\Mail\TestMail;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Route;
+
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -40,14 +46,11 @@ Route::get('/new/{id}', [CommentController::class, 'show_news'])->name('show_new
 
 Route::get('/permission', [UserController::class, 'permission']);
 
-// Route::get('/permission', function () {
-//     return view('admin.user.permission');
-// });
 
 
-Route::get('addcomment', [CommentController::class, 'create']);
-Route::post('savecomment/{id}', [CommentController::class, 'store'])->name('comment.save');
+//Email Verify
 
+Route::get('verify/{token}', [RegisteredUserController::class, 'verify']);
 
 
 
@@ -122,19 +125,22 @@ Route::middleware(['auth', 'verified', 'admin'])-> prefix('cpanel')->group(funct
 
             Route::get('addcomment', [CommentController::class, 'create']);
             Route::post('savecomment/{id}', [CommentController::class, 'store'])->name('comment.save');
-
+    
             Route::get('editcomment/{id}', [CommentController::class, 'edit'])->name('comment.edit');
             Route::post('updatecomment/{id}', [CommentController::class, 'update'])->name('comment.update');
-
+    
             Route::delete('deletecomment/{id}', [CommentController::class, 'destroy'])->name('comment.delete');
-
+          
+          
+            // Route::get('getLikes\{id}',[SiteController::class, 'Get_Likes'])->name('new.like');
             
+            // Route::get('store_like\{id}',[SiteController::class, 'store'])->name('store.like');
+
             // Route::get('rates', [RateController::class, 'index']);
 
-            // Route::get('like', [NewsController::class, 'newsList']);
 
-            // Route::post('like/{id}', [NewsController::class, 'like'])->name('news.like');
-            // Route::delete('like/{id}', [NewsController::class, 'unlike'])->name('news.unlike');
+            Route::post('insert_like/{id}', [SiteController::class, 'insert_like'])->name('insert_like');
+            Route::delete('delete_like/{id}', [SiteController::class, 'destroy'])->name('destroy');
 
         });
         
@@ -150,6 +156,22 @@ Route::middleware(['auth', 'verified', 'admin'])-> prefix('cpanel')->group(funct
             Route::delete('delete/{id}', [TagController::class, 'destroy'])->name('tags.delete');
         });
    
+
+
+
+
+        // Route:: prefix('comments')->group(function () {
+
+        // Route::get('comment', [CommentController::class, 'index']);
+
+        // Route::get('addcomment', [CommentController::class, 'create']);
+        // Route::post('createc/{id}', [CommentController::class, 'store'])->name('comment.save');
+
+        // Route::get('editcomment/{id}', [CommentController::class, 'edit'])->name('comment.edit');
+        // Route::post('updatecomment/{id}', [CommentController::class, 'update'])->name('comment.update');
+
+        // Route::delete('deletecomment/{id}', [CommentController::class, 'destroy'])->name('comment.delete');
+        // });
 });
 
 // Composer Routes
@@ -185,10 +207,10 @@ Route::middleware(['auth', 'verified', 'composer'])->prefix('cpanelc')->group(fu
         Route::delete('delete/{id}', [NewsController::class, 'destroy'])->name('newsc.delete');
 
         
-        Route::get('comment', [CommentController::class, 'index']);
+        // Route::get('comment', [CommentController::class, 'index']);
 
-        Route::get('addcomment', [CommentController::class, 'create']);
-        Route::post('savecomment/{id}', [CommentController::class, 'store'])->name('comment.save');
+        // Route::get('addcomment', [CommentController::class, 'create']);
+        // Route::post('savecomment/{id}', [CommentController::class, 'store'])->name('comment.save');
 
     });
 
@@ -216,10 +238,10 @@ Route::middleware(['auth', 'verified', 'visitor'])->prefix('site')->group(functi
         return view('site.news.new');
     });
 
-    Route::get('comment', [CommentController::class, 'index']);
+    // Route::get('comment', [CommentController::class, 'index']);
 
-    Route::get('addcomment', [CommentController::class, 'create']);
-    Route::post('savecomment/{id}', [CommentController::class, 'store'])->name('comment.save');
+    // Route::get('addcomment', [CommentController::class, 'create']);
+    // Route::post('savecomment/{id}', [CommentController::class, 'store'])->name('comment.save');
 
     // Route::post('/add_comment', [SiteController::class, 'add_comment']);
 

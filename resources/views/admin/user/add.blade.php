@@ -90,6 +90,13 @@
 										</div>
 									</div><br>
 
+									<div class="row">
+										<div class="col">
+											<label for="inputName" class="control-label">كلمة المرور</label>
+											<input type="password" class="form-control" id="inputName" name="password" required>
+										</div>
+									</div><br>
+
 									<div class="form-group">
 										<label>دور المستخدم</label>
 											<select name="role" class="testselect2">

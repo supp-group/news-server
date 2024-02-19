@@ -1,5 +1,8 @@
 @extends('site.layouts.master')
 @section('css')
+  {{-- <link rel="stylesheet" href="{{URL::asset('theme/css/font-awesome.min.css')}}"/> --}}
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 @endsection
 
 @section('header')
@@ -72,6 +75,15 @@
         </div>
       </nav>
     </div>
+
+
+    <style>
+      .redHeart{
+        color: red;
+      }
+    </style>
+
+
   </header>
 @endsection
 
@@ -91,26 +103,50 @@
 
               @foreach ($news as $new)
 
-              <div class="col-md-6 mb-4">
-                <article class="card article-card article-card-sm h-100">
-                  <a href="article.html">
-                    <div class="card-image">
-                      <div class="post-info"> <span class="text-uppercase">{{ $new->created_at->format('Y-m-d') }}</span>
-                        <span class="text-uppercase">{{ $new->created_at->format('H:i:s') }}</span>
+              {{-- <div class="card" data-news="{{ $new->id }}"> --}}
+                
+                <div class="col-md-6 mb-4">
+                  <article class="card article-card article-card-sm h-100">
+                      <div class="card-image">
+                        <div class="post-info"> <span class="text-uppercase">{{ $new->created_at->format('Y-m-d') }}</span>
+                          <span class="text-uppercase">{{ $new->created_at->format('H:i:s') }}</span>
+                        </div>
+                        <img loading="lazy" decoding="async" src="{{URL::asset('theme/images/post/post-1.jpg')}}" alt="Post Thumbnail" class="w-100">
                       </div>
-                      <img loading="lazy" decoding="async" src="{{URL::asset('theme/images/post/post-1.jpg')}}" alt="Post Thumbnail" class="w-100">
+ 
+
+                      <form action="{{ route('insert_like', $new->id) }}" method="post">
+                        @csrf
+                        <button class="like-button">
+                          <i class="fa fa-heart-o" style="font-size: 20px;">{{ $new->likes->count() }}</i>
+                        </button>
+                      </form>
+                  
+                    @if($likes->where('user_id', auth()->id()))
+                    <form action="{{ route('destroy', $new->id) }}" method="post">
+                        @csrf
+                        @method('DELETE')
+                        <button class="like-button">
+                            <i class="fa fa-heart" style="font-size: 20px;">{{ $new->likes->count() }}</i>
+                        </button>
+                    </form>
+                   
+                
+                @endif
+
+  
+                    <div class="card-body px-0 pb-0">
+                      <ul class="post-meta mb-2">
+                        <li style="color: #13AE6F;">{{ App\Models\Category::find($new->category_id)->category_name }}</li>
+                      </ul>
+                      <h2>{{ $new->title }}</h2>
+                      {{-- <p class="card-text">{{ $new->content }}</p> --}}
+                      <div class="content"> <a class="read-more-btn" href="{{ route('show_news', $new->id) }}">Read Full Article</a> </div>  
                     </div>
-                  </a>
-                  <div class="card-body px-0 pb-0">
-                    <ul class="post-meta mb-2">
-                      <li style="color: #13AE6F;">{{ App\Models\Category::find($new->category_id)->category_name }}</li>
-                    </ul>
-                    <h2>{{ $new->title }}</h2>
-                    {{-- <p class="card-text">{{ $new->content }}</p> --}}
-                    <div class="content"> <a class="read-more-btn" href="{{ route('show_news', $new->id) }}">Read Full Article</a> </div>  
-                  </div>
-                </article>
-              </div>
+                  </article>
+                </div>
+
+              {{-- </div> --}}
 
               @endforeach
             
@@ -156,17 +192,6 @@
     <div class="widget-blocks">
       <div class="row">
 
-        {{-- <div class="col-lg-12">
-          <div class="widget">
-            <div class="widget-body">
-              <img loading="lazy" decoding="async" src="{{URL::asset('theme/images/author.jpg')}}" alt="About Me" class="w-100 author-thumb-sm d-block">
-              <h2 class="widget-title my-3">Hootan Safiyari</h2>
-              <p class="mb-3 pb-2">Hello, I’m Hootan Safiyari. A Content writter, Developer and Story teller. Working as a Content writter at CoolTech Agency. Quam nihil …</p> <a href="about.html" class="btn btn-sm btn-outline-primary">Know
-                More</a>
-            </div>
-          </div>
-        </div> --}}
-
         <div class="col-lg-12 col-md-6">
           <div class="widget">
             <h2 class="section-title mb-3">Categories</h2>
@@ -181,59 +206,6 @@
             </div>
           </div>
         </div>
-
-
-        {{-- <div class="col-lg-12 col-md-6">
-          <div class="widget">
-            <h2 class="section-title mb-3">Recommended</h2>
-            <div class="widget-body">
-              <div class="widget-list">
-                <article class="card mb-4">
-                  <div class="card-image">
-                    <div class="post-info"> <span class="text-uppercase">1 minutes read</span>
-                    </div>
-                    <img loading="lazy" decoding="async" src="{{URL::asset('theme/images/post/post-9.jpg')}}" alt="Post Thumbnail" class="w-100">
-                  </div>
-                  <div class="card-body px-0 pb-1">
-                    <h3><a class="post-title post-title-sm"
-                        href="article.html">Portugal and France Now
-                        Allow Unvaccinated Tourists</a></h3>
-                    <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor …</p>
-                    <div class="content"> <a class="read-more-btn" href="article.html">Read Full Article</a>
-                    </div>
-                  </div>
-                </article>
-                <a class="media align-items-center" href="article.html">
-                  <img loading="lazy" decoding="async" src="{{URL::asset('theme/images/post/post-2.jpg')}}" alt="Post Thumbnail" class="w-100">
-                  <div class="media-body ml-3">
-                    <h3 style="margin-top:-5px">These Are Making It Easier To Visit</h3>
-                    <p class="mb-0 small">Heading Here is example of hedings. You can use …</p>
-                  </div>
-                </a>
-                <a class="media align-items-center" href="article.html"> <span class="image-fallback image-fallback-xs">No Image Specified</span>
-                  <div class="media-body ml-3">
-                    <h3 style="margin-top:-5px">No Image specified</h3>
-                    <p class="mb-0 small">Lorem ipsum dolor sit amet, consectetur adipiscing …</p>
-                  </div>
-                </a>
-                <a class="media align-items-center" href="article.html">
-                  <img loading="lazy" decoding="async" src="{{URL::asset('theme/images/post/post-5.jpg')}}" alt="Post Thumbnail" class="w-100">
-                  <div class="media-body ml-3">
-                    <h3 style="margin-top:-5px">Perfect For Fashion</h3>
-                    <p class="mb-0 small">Lorem ipsum dolor sit amet, consectetur adipiscing …</p>
-                  </div>
-                </a>
-                <a class="media align-items-center" href="article.html">
-                  <img loading="lazy" decoding="async" src="{{URL::asset('theme/images/post/post-9.jpg')}}" alt="Post Thumbnail" class="w-100">
-                  <div class="media-body ml-3">
-                    <h3 style="margin-top:-5px">Record Utra Smooth Video</h3>
-                    <p class="mb-0 small">Lorem ipsum dolor sit amet, consectetur adipiscing …</p>
-                  </div>
-                </a>
-              </div>
-            </div>
-          </div>
-        </div> --}}
         
       </div>
     </div>

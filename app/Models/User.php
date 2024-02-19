@@ -60,13 +60,12 @@ class User extends Authenticatable
         return $this->hasMany(News::class, 'composer_id');
     }
 
+    public function likes()
+    {
+    return $this->belongsToMany(News::class, 'likes');
+    }
+    
 
-
-    // protected function role(): Attribute
-    // {
-    //     return new Attribute(
-    //         get: fn ($value) => ["admin", "composer", "visitor"][$value],
-    //     );
-    // }
+    
 
 }
